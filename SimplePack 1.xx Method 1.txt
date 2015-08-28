@@ -1,0 +1,40 @@
+//////////////////////////////////////////////////
+//  FileName    :  SimplePack 1.xx Method 1.txt
+//  Comment     :  OEP Find For SimplePack 1.xx Method 1
+//  Author      :  _pusher_
+//  Date        :  2015-08-28
+//////////////////////////////////////////////////
+
+//start
+msg "SimplePack 1.xx Method 1 OEP Finder"
+msg "make sure you're at the entry point of the program before you continue"
+pause
+
+//clear breakpoints
+bc
+bphwc
+
+//find oep jump
+find cip,"6168" //some pattern
+log "found: {0}", $result
+cmp $result,0
+je error
+
+//go to OEP
+bp $result
+erun
+bc
+$dest = 4:[$result+2]
+log "OEP: {0}", $dest
+
+bp $dest
+erun
+
+cmt cip,"OEP"
+
+//finish script
+ret
+
+error:
+msg "didn't find oep jump"
+ret
